@@ -14,6 +14,17 @@ curl -X POST 'http://localhost:8080/api/v1/sessions'
 # Example output
 {"session_id":"eyJhbGciOiJIUzI1NiIsImtpZCI6ImRlZmF1bHQiLCJ0eXA....."}
 ````
+The jwt payload includes a `jti` key which is used to blacklist the token.  The krakend.json must be configured with the same key.  See config/krakend.json
+
+````json
+{
+  "exp": 7600309454,
+  "iat": 1600309454,
+  "jti": "417b884d-db17-42c0-8222-9eca67b5420a",
+  "username": "joe"
+}
+````
+
 
 B. Test out a secured api.  This will fail if no auth token is passed.
 ````shell script
