@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "extra_config":{
+    "github_com/devopsfaith/bloomfilter": {
+      "N": 10000000,
+      "P": 0.0000001,
+      "HashName": "optimal",
+      "TTL": 120,
+      "port": 1234,
+      "TokenKeys": ["jti"]
+    }
+  },
+  "endpoints": [
+    {
+      "endpoint": "/api/v1/sessions",
+      "method" : "POST",
+      "backend": [
+        {
+          "url_pattern": "/sessions",
+          "host": [ "http://sessionservice:3000" ],
+          "encoding": "json"
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/sessions",
+      "method" : "DELETE",
+      "headers_to_pass": [ "Authorization" ],
+      "extra_config": {
+        "github.com/devopsfaith/krakend-jose/validator": {
+          "alg": "HS256",
+          "jwk-url": "http://sessionservice:3000/keys",
+          "disable_jwk_security": true
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/sessions",
+          "host": [ "http://sessionservice:3000" ],
+          "encoding": "json"
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/messages",
+      "extra_config": {
+        "github.com/devopsfaith/krakend-jose/validator": {
+          "alg": "HS256",
+          "jwk-url": "http://sessionservice:3000/keys",
+          "disable_jwk_security": true
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/messages",
+          "host": [ "http://sessionservice:3000" ],
+          "encoding": "json"
+        }
+      ]
+    }
+  ]
+}

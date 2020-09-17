@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+
+  sessionservice:
+    build: .
+    env_file:
+      - .env
+    links:
+      - api_gateway
+
+  api_gateway:
+    image: devopsfaith/krakend
+    volumes:
+      - ./config:/etc/krakend
+    ports:
+      - 8080:8080
+
+
